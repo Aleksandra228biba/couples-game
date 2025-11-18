@@ -10,8 +10,8 @@ const restartBtn = document.getElementById('restart-btn')
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    [array[i], array[j] = array[j], array[i]]
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]
   }
 }
 
@@ -20,7 +20,7 @@ function createCard(value) {
   card.classList.add('card')
   card.dataset.value = value
 
-  card.addEventListener('click', ()=>{
+  card.addEventListener('click', () => {
     if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards === 2) {
       return
     }
@@ -29,7 +29,7 @@ function createCard(value) {
     card.classList.add('flipped')
     flippedCards.push(card)
 
-    if(flippedCards.length === 2) {
+    if (flippedCards.length === 2) {
       const [first, second] = flippedCards
       if (first.dataset.value === second.dataset.value) {
         first.classList.add('matched')
@@ -38,13 +38,13 @@ function createCard(value) {
         matchedCount++
 
         if (matchedCount === totalPairs) {
-          setTimeout(()=>{
+          setTimeout(() => {
             restartBtn.style.display = 'inline-block'
           }, 500)
         }
       }
       else {
-        setTimeout(()=>{
+        setTimeout(() => {
           first.classList.remove('flipped')
           second.classList.remove('flipped')
           first.textContent = ''
@@ -56,3 +56,20 @@ function createCard(value) {
   })
   return card
 }
+
+function initGame() {
+  gameBoard.innerHTML = ''
+  restartBtn.style.display = 'none'
+  flippedCards = []
+  matchedCount = 0
+
+  shuffle(cards)
+
+  cards.forEach(value => {
+    gameBoard.appendChild(createCard(value))
+  })
+}
+
+restartBtn.addEventListener('click', initGame)
+
+initGame()
